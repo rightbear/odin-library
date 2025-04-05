@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="add-region">
+            <dialog id="bookDialog">
+                <form id="dialogForm" method="dialog">
+                    <div>
+                        <label for="author">Author:</label>
+                        <input type="text" name="author" id="author" required>
+                    </div>
+                    
+                    <div>
+                        <label for="title">Title:</label>
+                        <input type="text" name="title" id="title" required>
+                    </div>
+                    
+                    <div>
+                        <label for="pages">Number of pages:</label>
+                        <input type="number" name="pages" id="pages" required>
+                    </div>
+
+                    <div>
+                        <fieldset>
+                            <legend>Have you read the book?</legend>
+                            <div>
+                                <div>
+                                    <input type="radio" id="read_yes" name="read" value="read_yes" checked />
+                                    <label for="read_yes">Yes</label>
+                                </div>
+                            
+                                <div>
+                                    <input type="radio" id="read_no" name="read" value="read_no" />
+                                    <label for="read_no">No</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="confirmBtn" value="confrm" autofocus>OK</button>
+                        <button type="submit" id="cancelBtn" value="cancel" formnovalidate>Cancel</button>
+                    </div>
+                </form>
+            </dialog>
+
+            <button id="showDialogBtn">Add a new book!</button>
+            <output></output>
+        </div>
+
+        <div class="book-list">
+
+        </div>
+    </div>
+</body>
+</html>
