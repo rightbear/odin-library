@@ -1,6 +1,6 @@
 const myLibrary = [];
 
-function Book(author, title, pages, read) {
+function Book(author, title, pages, alreadyRead) {
     if (!new.target) {
         throw Error("You must use the 'new' operator to call the constructor");
     }
@@ -8,10 +8,10 @@ function Book(author, title, pages, read) {
     this.author = author;
     this.title = title;
     this.pages = pages;
-    this.read = read;
+    this.alreadyRead = alreadyRead;
     this.info = function(){
         let result = `${this.title} by ${this.author}, ${this.pages} pages, `;
-        if (read == "read_no"){
+        if (alreadyRead == "read_no"){
             result += "not read yet";
         }
         else {
@@ -21,8 +21,8 @@ function Book(author, title, pages, read) {
     };
 }
 
-function addBookToLibrary(author, title, pages, read) {
-    const newBook = new Book(author, title, pages, read);
+function addBookToLibrary(author, title, pages, alreadyRead) {
+    const newBook = new Book(author, title, pages, alreadyRead);
     myLibrary.push(newBook);
 }
 
@@ -42,6 +42,9 @@ const outputBox = document.querySelector("output");
 
 const confirmBtn = bookDialog.querySelector("#confirmBtn");
 const cancelBtn = bookDialog.querySelector("#cancelBtn");
+
+const bookList = document.querySelector(".bookList");
+let bookNum = 0;
 
 // "Add a new book!" button opens the dialog modally
 showButton.addEventListener("click", () => {
@@ -81,10 +84,10 @@ bookDialog.addEventListener("close", (e) => {
         const author = document.querySelector('#author');
         const title = document.querySelector('#title');
         const pages = document.querySelector('#pages');
-        const read = document.querySelector('input[name="read"]:checked');
+        const alreadyRead = document.querySelector('input[name="read"]:checked');
                 
         let result = `${title.value} by ${author.value}, ${pages.value} pages, `
-        if (read.value == "read_no"){
+        if (alreadyRead.value == "read_no"){
             result += "not read yet";
         }
         else {
@@ -92,7 +95,17 @@ bookDialog.addEventListener("close", (e) => {
         }
         console.log(result);
 
-        addBookToLibrary(author.value, title.value, pages.value, read.value);
+        addBookToLibrary(author.value, title.value, pages.value, alreadyRead.value);
+
+
+        if(bookNum == 0){
+            while (bookList.firstChild) {
+                bookList.removeChild(bookList.firstChild);
+            }
+            createTable()
+        }
+
+        addNewRow(author.value, title.value, pages.value, alreadyRead.value)
     }
     
     dialogForm.reset();
@@ -113,3 +126,34 @@ bookDialog.addEventListener('click', (e) => {
         bookDialog.close();
     }
 });
+
+// If the new book is successfully added and the number of books
+// become nonzero in library, the table of library will be created  
+function createTable() {
+
+    let headers = ["Index", "Author", "Title", "Number of pages", "Already read?", "Delete"];
+    const libraryTable = document.createElement("TABLE");  //makes a table element for the page
+    libraryTable.setAttribute("id", "libraryTable");
+
+    let libraryHeader = libraryTable.createTHead();
+    let libraryHeaderRow = libraryHeader.insertRow(0);
+    for(let i = 0; i < headers.length; i++) {
+        libraryHeaderRow.insertCell(i).innerHTML = headers[i];
+    }
+    bookList.append(libraryTable);
+}
+
+// If the new book is successfully added, the table of library 
+// will increase 1 row and the content of new row is related to 
+// the new book
+function addNewRow(author, title, pages, alreadyRead) {
+    bookNum += 1;
+    const libraryTable = document.getElementById("libraryTable");
+    let newRow = libraryTable.insertRow(bookNum);
+    newRow.insertCell(0).textContent = `${bookNum}`;
+    newRow.insertCell(1).textContent = `${author}`;
+    newRow.insertCell(2).textContent = `${title}`;
+    newRow.insertCell(3).textContent = `${pages}`;
+    newRow.insertCell(4).textContent = `${alreadyRead}`;
+    newRow.insertCell(5).innerHTML = "<img src='./pictures/trash-can.svg' alt='delete-icon'>";
+}

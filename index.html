@@ -48,7 +48,9 @@
 
                     <div>
                         <button type="submit" id="confirmBtn" value="confrm" autofocus>OK</button>
-                        <button type="submit" id="cancelBtn" value="cancel" formnovalidate>Cancel</button>
+                        <!-- HTML <form> elements can be used to close a dialog box if the button used to submit the form has formmethod="dialog" set-->
+                        <!-- When a form inside a dialog has a required input, to close such dialog, use the "formnovalidate" attribute on the close button-->
+                        <button type="submit" id="cancelBtn" value="cancel" formmethod="dialog" formnovalidate>Cancel</button>
                     </div>
                 </form>
             </dialog>
@@ -57,9 +59,10 @@
             <output></output>
         </div>
 
-        <div class="book-list">
-
+        <div class="bookList">
+            <span id="emptyLibrary"> The library is empty. Go adding some books and enjoy reading. <span> 
         </div>
+        <button type="button" onclick="addNewRow()">Try it</button>
     </div>
 </body>
 </html>
