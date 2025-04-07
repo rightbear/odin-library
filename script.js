@@ -155,7 +155,7 @@ function addNewRow(author, title, pages, alreadyReadResult) {
     newRow.insertCell(2).textContent = `${title}`;
     newRow.insertCell(3).textContent = `${pages}`;
     // The data attributes in cell4 and cell5 (data-readresult-rows, data-deleteicon-rows)
-    // indicates the row index nuber of the current row
+    // indicates the row index nuber of the new row
     let cell4 = newRow.insertCell(4);
     cell4.innerHTML = alreadyReadResult
                                     ? "<input type='checkbox' checked/>"
@@ -164,6 +164,14 @@ function addNewRow(author, title, pages, alreadyReadResult) {
     let cell5 = newRow.insertCell(5);
     cell5.innerHTML = "<img src='./pictures/trash-can.svg' alt='delete-icon'>";
     cell5.setAttribute("data-deleteicon-rows", bookNum);
+
+    // Set the class of the new row (book) based on state of reading 
+    if(alreadyReadResult){
+        newRow.setAttribute("class", "readedBook");
+    }
+    else{
+        newRow.setAttribute("class", "unReadedBook");
+    }
 }
 
 // if the deletion icon in specific row is clicked, the row will be deelted
@@ -175,8 +183,9 @@ bookList.addEventListener('click', function (event){
         const readResultCheckboxes = document.querySelectorAll("[data-readresult-rows]");
         const deleteicons = document.querySelectorAll("[data-deleteicon-rows]");
 
+        // The clicked target is delete icon (have data attribute "data-deleteicon-rows")
         if((target.parentNode).dataset.deleteiconRows){
-            // Retrive the index of row from the data attribute(data-deleteicon-rows)
+            // Retrive the index of row from the data attribute (data-deleteicon-rows)
             // in the container of clicked deletion icon
             const cellNum = Number((target.parentNode).dataset.deleteiconRows);
             const currentTableRow = document.querySelector(`#libraryTable thead tr:nth-child(${cellNum+1})`);
@@ -190,7 +199,7 @@ bookList.addEventListener('click', function (event){
             // if there are remaining rows below the deleted row after the deletion,
             // update the row information;
             if(cellNum != bookNum){
-                updateCells(cellNum);
+                updateCellIndex(cellNum);
             }
 
             bookNum -= 1;
@@ -201,12 +210,33 @@ bookList.addEventListener('click', function (event){
                 showEmptyMsg()
             }
         }
+
+        // The clicked target is read checkbox (have data attribute "data-readresult-rows")
+        if((target.parentNode).dataset.readresultRows){
+            // Retrive the index of row from the data attribute (data-readresult-rows)
+            // in the container of clicked read checkbox
+            const cellNum = Number((target.parentNode).dataset.readresultRows);            
+            const currentTableRow = document.querySelector(`#libraryTable thead tr:nth-child(${cellNum+1})`);
+
+            let newReadState = target.checked;
+            // If the checkbox in specific row is clicked (the reading state is changed),
+            // change the "alreadyRead" property of the corresponding object in the array
+            myLibrary[cellNum-1].alreadyRead = newReadState;
+
+            // change the class of the current row(book) based on state of reading
+            if(newReadState){
+                currentTableRow.setAttribute("class", "readedBook");
+            }
+            else{
+                currentTableRow.setAttribute("class", "unReadedBook");
+            }
+        }
     }
 });
 
 // Update the information of the index number, and update values of two data attributes
 // The values will be the new row index of current row
-function updateCells(cellNum){
+function updateCellIndex(cellNum){
     const updatedTableRows = document.querySelectorAll(`#libraryTable thead tr:nth-child(n + ${cellNum+1})`);
 
     if(updatedTableRows){
@@ -235,6 +265,3 @@ function showEmptyMsg(){
     librarySpan.textContent = "The library is empty. Try add some books and enjoy reading."
     bookList.appendChild(librarySpan);
 }
-
-//根據already read 是否被打勾來切換顏色
-//根據already read 是否被打勾來切換array的read

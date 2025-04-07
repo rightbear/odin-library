@@ -111,6 +111,10 @@ dialog:open {
   }
   
 
-  #libraryTable thead tr:nth-child(2){
-    background-color: red;
+  .readedBook{
+    background-color: blue;
+  }
+
+  .unReadedBook{
+    background-color: green;
   }
