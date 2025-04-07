@@ -46,11 +46,6 @@ const cancelBtn = bookDialog.querySelector("#cancelBtn");
 const bookList = document.querySelector(".bookList");
 let bookNum = 0;
 
-// "Add a new book!" button opens the dialog modally
-showButton.addEventListener("click", () => {
-    bookDialog.showModal();
-});
-
 /*
 bookDialog.addEventListener("cancel", (e) => {
     outputBox.value = "dialog was canceled with ESC";
@@ -64,6 +59,13 @@ confirmBtn.addEventListener("click", (e) => {
     outputBox.value = "ok buttin is clicked";
 });
 */
+
+/////////////////////////////////////////////////////////////////
+
+// "Add a new book!" button opens the dialog modally
+showButton.addEventListener("click", () => {
+    bookDialog.showModal();
+});
 
 // If user click "OK" button in form of dialog, it will triger 
 // a close behavior for dialog
@@ -110,7 +112,6 @@ bookDialog.addEventListener("close", (e) => {
 
 /////////////////////////////////
 
-
 // Users can click outside region of modal to close dialog
 bookDialog.addEventListener('click', (e) => {
     const dialogDimensions = bookDialog.getBoundingClientRect();
@@ -125,7 +126,7 @@ bookDialog.addEventListener('click', (e) => {
 });
 
 // If the new book is successfully added and the number of books
-// become nonzero in library, the table of library will be created  
+// increases from zero to nonzero in library, the table of library will be created  
 function createTable() {
 
     let headers = ["Index", "Author", "Title", "Number of pages", "Already read?", "Delete"];
@@ -203,7 +204,6 @@ bookList.addEventListener('click', function (event){
     }
 });
 
-
 // Update the information of the index number, and update values of two data attributes
 // The values will be the new row index of current row
 function updateCells(cellNum){
@@ -223,9 +223,18 @@ function updateCells(cellNum){
     }
 }
 
-//如果table為空，顯示原版的span
+// If the table become empty after deletion of rows, show some 
+// message indicating empty situation
+function showEmptyMsg(){
+    while (bookList.firstChild) {
+        bookList.removeChild(bookList.firstChild);
+    }
+
+    const librarySpan = document.createElement("span");
+    librarySpan.setAttribute("id", "emptyLibrary");
+    librarySpan.textContent = "The library is empty. Try add some books and enjoy reading."
+    bookList.appendChild(librarySpan);
+}
+
 //根據already read 是否被打勾來切換顏色
 //根據already read 是否被打勾來切換array的read
-function showEmptyMsg(){
-
-}
