@@ -110,3 +110,7 @@ dialog:open {
     padding: 10px 20px;
   }
   
+
+  #libraryTable thead tr:nth-child(2){
+    background-color: red;
+  }
