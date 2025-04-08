@@ -112,6 +112,7 @@ bookDialog.addEventListener("close", (e) => {
 
 /////////////////////////////////
 
+
 // Users can click outside region of modal to close dialog
 bookDialog.addEventListener('click', (e) => {
     const dialogDimensions = bookDialog.getBoundingClientRect();
@@ -121,14 +122,27 @@ bookDialog.addEventListener('click', (e) => {
       e.clientY < dialogDimensions.top ||
       e.clientY > dialogDimensions.bottom
     ) {
+        bookDialog.returnValue = "cancel";
         bookDialog.close();
     }
 });
+
 
 // If the new book is successfully added and the number of books
 // increases from zero to nonzero in library, the table of library will be created  
 function createTable() {
 
+    // Make caption with main information of table
+    // The caption is not positioned in the table for the scrollable design
+    const tableSpan = document.createElement("span");
+    tableSpan.setAttribute("id", "tableSpan");
+    tableSpan.textContent = "The information of books in library"
+
+    // Make a div container for the scrollableTable design
+    const tableContainer = document.createElement("div");
+    tableContainer.setAttribute("id", "scrollableTable");
+
+    // Make the table
     let headers = ["Index", "Author", "Title", "Number of pages", "Already read?", "Delete"];
     const libraryTable = document.createElement("TABLE");  //makes a table element for the page
     libraryTable.setAttribute("id", "libraryTable");
@@ -136,9 +150,25 @@ function createTable() {
     let libraryHeader = libraryTable.createTHead();
     let libraryHeaderRow = libraryHeader.insertRow(0);
     for(let i = 0; i < headers.length; i++) {
-        libraryHeaderRow.insertCell(i).innerHTML = headers[i];
+        let newThElement = libraryHeaderRow.insert_th_Cell(i);
+        newThElement.innerHTML = headers[i];
+        newThElement.setAttribute("scope", "col");
     }
-    bookList.append(libraryTable);
+
+    libraryTable.createTBody();
+    
+    tableContainer.append(libraryTable);
+    bookList.appendChild(tableSpan);
+    bookList.appendChild(tableContainer);
+}
+
+// Call thus function insert <th> in the table instead of <td>
+HTMLTableRowElement.prototype.insert_th_Cell = function(index) 
+  {
+  let cell = this.insertCell(index);
+  let c_th = document.createElement('th');
+  cell.replaceWith(c_th);
+  return c_th;
 }
 
 // If the new book is successfully added, the table of library 
@@ -146,11 +176,13 @@ function createTable() {
 // the new book
 function addNewRow(author, title, pages, alreadyReadResult) {
     bookNum += 1;
-    const libraryTable = document.querySelector("#libraryTable");
+    const libraryBody = document.querySelector("#libraryTable tbody");
     // The position of new row is the next row in the end of table
-    let newRow = libraryTable.insertRow(bookNum);
+    let newRow = libraryBody.insertRow(bookNum-1);
     // Setting cells of the new row
-    newRow.insertCell(0).textContent = `${bookNum}`;
+    let cell0 = newRow.insert_th_Cell(0);
+    cell0.textContent = `${bookNum}`;
+    cell0.setAttribute("scope", "row");
     newRow.insertCell(1).textContent = `${author}`;
     newRow.insertCell(2).textContent = `${title}`;
     newRow.insertCell(3).textContent = `${pages}`;
@@ -179,7 +211,7 @@ bookList.addEventListener('click', function (event){
     let target = event.target;
 
     if (document.querySelector("#libraryTable") != null) {
-        const libraryTableHead = document.querySelector("#libraryTable thead");
+        const libraryTableBody = document.querySelector("#libraryTable tbody");
         const readResultCheckboxes = document.querySelectorAll("[data-readresult-rows]");
         const deleteicons = document.querySelectorAll("[data-deleteicon-rows]");
 
@@ -188,10 +220,10 @@ bookList.addEventListener('click', function (event){
             // Retrive the index of row from the data attribute (data-deleteicon-rows)
             // in the container of clicked deletion icon
             const cellNum = Number((target.parentNode).dataset.deleteiconRows);
-            const currentTableRow = document.querySelector(`#libraryTable thead tr:nth-child(${cellNum+1})`);
+            const currentTableRow = document.querySelector(`#libraryTable tbody tr:nth-child(${cellNum})`);
             
             // delete the specific row in the table
-            libraryTableHead.removeChild(currentTableRow);
+            libraryTableBody.removeChild(currentTableRow);
             // delete the corresponding object of row in array
             myLibrary.splice(cellNum-1, 1);
             
@@ -216,7 +248,7 @@ bookList.addEventListener('click', function (event){
             // Retrive the index of row from the data attribute (data-readresult-rows)
             // in the container of clicked read checkbox
             const cellNum = Number((target.parentNode).dataset.readresultRows);            
-            const currentTableRow = document.querySelector(`#libraryTable thead tr:nth-child(${cellNum+1})`);
+            const currentTableRow = document.querySelector(`#libraryTable tbody tr:nth-child(${cellNum})`);
 
             let newReadState = target.checked;
             // If the checkbox in specific row is clicked (the reading state is changed),
@@ -237,11 +269,11 @@ bookList.addEventListener('click', function (event){
 // Update the information of the index number, and update values of two data attributes
 // The values will be the new row index of current row
 function updateCellIndex(cellNum){
-    const updatedTableRows = document.querySelectorAll(`#libraryTable thead tr:nth-child(n + ${cellNum+1})`);
+    const updatedTableRows = document.querySelectorAll(`#libraryTable tbody tr:nth-child(n + ${cellNum})`);
 
     if(updatedTableRows){
         updatedTableRows.forEach((updatedTableRow) => {
-            const indexCell = updatedTableRow.querySelector("td:first-child");
+            const indexCell = updatedTableRow.querySelector("th:first-child");
             const readCell = updatedTableRow.querySelector("td:nth-child(5)");
             const deleteCell = updatedTableRow.querySelector("td:nth-child(6)");
             let newIndex = Number(indexCell.textContent) - 1;
