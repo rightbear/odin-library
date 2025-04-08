@@ -10,13 +10,7 @@ function Book(author, title, pages, alreadyRead) {
     this.pages = pages;
     this.alreadyRead = alreadyRead;
     this.info = function(){
-        let result = `${this.title} by ${this.author}, ${this.pages} pages, `;
-        if (alreadyRead){
-            result += "have read";
-        }
-        else {
-            result += "not read yet";
-        }
+        let result = `${this.title} by ${this.author}, ${this.pages} pages`; 
         return result;
     };
 }
@@ -45,6 +39,8 @@ const cancelBtn = bookDialog.querySelector("#cancelBtn");
 
 const bookList = document.querySelector(".bookList");
 let bookNum = 0;
+let readedBookNum = 0;
+let unReadedBookNum = 0;
 
 /*
 bookDialog.addEventListener("cancel", (e) => {
@@ -101,7 +97,8 @@ bookDialog.addEventListener("close", (e) => {
             while (bookList.firstChild) {
                 bookList.removeChild(bookList.firstChild);
             }
-            createTable()
+            createTable();
+            createProgressBar();
         }
 
         addNewRow(author.value, title.value, pages.value, alreadyReadResult)
@@ -162,6 +159,24 @@ function createTable() {
     bookList.appendChild(tableContainer);
 }
 
+function createProgressBar(){
+    const prgressInfo = document.createElement("div");
+    prgressInfo.setAttribute("id", "prgressInfo");
+
+    const prgressBarLabel = document.createElement("label");
+    prgressBarLabel.setAttribute("for", "reading");
+    prgressBarLabel.textContent = "Reading progress: 0 / 0";
+
+    const prgressBar = document.createElement("progress");
+    prgressBar.setAttribute("id", "reading");
+    prgressBar.setAttribute("max", "100");
+    prgressBar.setAttribute("value", "0");
+
+    bookList.appendChild(prgressInfo);
+    prgressInfo.appendChild(prgressBarLabel);
+    prgressInfo.appendChild(prgressBar);
+}
+
 // Call thus function insert <th> in the table instead of <td>
 HTMLTableRowElement.prototype.insert_th_Cell = function(index) 
   {
@@ -200,10 +215,14 @@ function addNewRow(author, title, pages, alreadyReadResult) {
     // Set the class of the new row (book) based on state of reading 
     if(alreadyReadResult){
         newRow.setAttribute("class", "readedBook");
+        readedBookNum += 1;
     }
     else{
         newRow.setAttribute("class", "unReadedBook");
+        unReadedBookNum += 1;
     }
+
+    updateProgressBar();
 }
 
 // if the deletion icon in specific row is clicked, the row will be deelted
@@ -225,6 +244,13 @@ bookList.addEventListener('click', function (event){
             // delete the specific row in the table
             libraryTableBody.removeChild(currentTableRow);
             // delete the corresponding object of row in array
+            if(myLibrary[cellNum-1].alreadyRead){
+                readedBookNum -= 1;
+            }
+            else{
+                unReadedBookNum -= 1;
+            }
+
             myLibrary.splice(cellNum-1, 1);
             
 
@@ -258,13 +284,28 @@ bookList.addEventListener('click', function (event){
             // change the class of the current row(book) based on state of reading
             if(newReadState){
                 currentTableRow.setAttribute("class", "readedBook");
+                readedBookNum += 1;
+                unReadedBookNum -= 1;
             }
             else{
                 currentTableRow.setAttribute("class", "unReadedBook");
+                readedBookNum -= 1;
+                unReadedBookNum += 1;
             }
         }
+
+        updateProgressBar();
     }
 });
+
+function updateProgressBar(){
+    const prgressBarLabel = document.querySelector("#prgressInfo label");
+    prgressBarLabel.textContent = `Reading progress: ${readedBookNum} / ${bookNum}`;
+
+    const prgressBar = document.querySelector("#prgressInfo progress");
+    prgressBar.setAttribute("max", `${bookNum}`);
+    prgressBar.setAttribute("value", `${readedBookNum}`);
+}
 
 // Update the information of the index number, and update values of two data attributes
 // The values will be the new row index of current row

@@ -275,3 +275,10 @@ table img {
   cursor: pointer;
   width: 50px;
 }
+
+/*************************************/
+
+label {
+  padding-right: 10px;
+  font-size: 1rem;
+}
