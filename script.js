@@ -160,21 +160,21 @@ function createTable() {
 }
 
 function createProgressBar(){
-    const prgressInfo = document.createElement("div");
-    prgressInfo.setAttribute("id", "prgressInfo");
+    const progressInfo = document.createElement("div");
+    progressInfo.setAttribute("id", "progressInfo");
 
-    const prgressBarLabel = document.createElement("label");
-    prgressBarLabel.setAttribute("for", "reading");
-    prgressBarLabel.textContent = "Reading progress: 0 / 0";
+    const progressBarLabel = document.createElement("label");
+    progressBarLabel.setAttribute("for", "reading");
+    progressBarLabel.textContent = "Reading progress: 0 / 0";
 
-    const prgressBar = document.createElement("progress");
-    prgressBar.setAttribute("id", "reading");
-    prgressBar.setAttribute("max", "100");
-    prgressBar.setAttribute("value", "0");
+    const progressBar = document.createElement("progress");
+    progressBar.setAttribute("id", "reading");
+    progressBar.setAttribute("max", "100");
+    progressBar.setAttribute("value", "0");
 
-    bookList.appendChild(prgressInfo);
-    prgressInfo.appendChild(prgressBarLabel);
-    prgressInfo.appendChild(prgressBar);
+    bookList.appendChild(progressInfo);
+    progressInfo.appendChild(progressBarLabel);
+    progressInfo.appendChild(progressBar);
 }
 
 // Call thus function insert <th> in the table instead of <td>
@@ -299,12 +299,12 @@ bookList.addEventListener('click', function (event){
 });
 
 function updateProgressBar(){
-    const prgressBarLabel = document.querySelector("#prgressInfo label");
-    prgressBarLabel.textContent = `Reading progress: ${readedBookNum} / ${bookNum}`;
+    const progressBarLabel = document.querySelector("#progressInfo label");
+    progressBarLabel.textContent = `Reading progress: ${readedBookNum} / ${bookNum}`;
 
-    const prgressBar = document.querySelector("#prgressInfo progress");
-    prgressBar.setAttribute("max", `${bookNum}`);
-    prgressBar.setAttribute("value", `${readedBookNum}`);
+    const progressBar = document.querySelector("#progressInfo progress");
+    progressBar.setAttribute("max", `${bookNum}`);
+    progressBar.setAttribute("value", `${readedBookNum}`);
 }
 
 // Update the information of the index number, and update values of two data attributes

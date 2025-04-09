@@ -22,9 +22,8 @@ html {
     justify-content: center;
     align-items: center;
 
-    height: 25vh;
+    height: 20vh;
     width: 40vw;
-    gap: 10px;
 
     background-color: white;
 }
@@ -35,6 +34,8 @@ html {
   align-items: center;
   background-color: white;
 
+  border: 2px solid #ccc;
+  padding: 30px;
   width: 95%;
   margin-bottom: 20px;
 }
@@ -161,10 +162,8 @@ dialog:open::backdrop {
 #emptyLibrary {
   margin: 50px auto;
   font-size: 50px;
-  padding: 30px;
 
   background-color: white;
-  border: 2px solid #ccc;
   border-radius: 5px;
 }
 
@@ -188,7 +187,7 @@ table {
 /* make tbody part scrollable if there are too much row */
 
 #scrollableTable {
-  height: 550px;
+  max-height: 450px;
   width: 100%;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
@@ -203,7 +202,7 @@ tr {
   scroll-snap-align: start;
 }
 
-/**/
+/* Set the wdth for diffeent table headers */
 
 thead th:nth-child(1) {
   width: 8%;
@@ -214,11 +213,11 @@ thead th:nth-child(2) {
 }
   
 thead th:nth-child(3) {
-  width: 35%;
+  width: 40%;
 }
   
 thead th:nth-child(4) {
-  width: 15%;
+  width: 10%;
 }
 
 thead th:nth-child(5) {
@@ -254,14 +253,16 @@ td {
   font-size: 24px;
   letter-spacing: 1px;
   text-align: center;
+
+  word-wrap: break-word;
 }
 
 .readedBook{
-  background-color: #ccc;
+  background-color: LemonChiffon;
 }
 
 .unReadedBook{
-  background-color: white;
+  background-color: LightCoral;
 }
 
 table input[type=checkbox] {
@@ -278,7 +279,21 @@ table img {
 
 /*************************************/
 
-label {
-  padding-right: 10px;
-  font-size: 1rem;
+#progressInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 30px;
+  gap: 15px;
+}
+
+#progressInfo label {
+  font-size: 30px;
+}
+
+#progressInfo progress {
+  width: 100%;
+  height: 30px;
 }
