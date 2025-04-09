@@ -24,6 +24,11 @@ function loopArrayAndDisplay(){
     myLibrary.forEach((value) => {console.log(value.info())});
 }
 
+// Design prototype function that toggles a book instance’s read status
+Book.prototype.changeObjectState = function(newReadState){
+    this.alreadyRead = newReadState;
+}
+
 
 /////////////////////////////////////////////////////////////////
 
@@ -281,7 +286,7 @@ bookList.addEventListener('click', function (event){
             let newReadState = target.checked;
             // If the checkbox in specific row is clicked (the reading state is changed),
             // change the "alreadyRead" property of the corresponding object in the array
-            myLibrary[cellNum-1].alreadyRead = newReadState;
+            myLibrary[cellNum-1].changeObjectState(newReadState);
 
             // Based on state of reading, change the class of the current row(book) and the differnet book numbers
             if(newReadState){
