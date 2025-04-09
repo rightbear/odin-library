@@ -159,6 +159,7 @@ function createTable() {
     bookList.appendChild(tableContainer);
 }
 
+// Create a progress bar for users to view the finishment rate in library
 function createProgressBar(){
     const progressInfo = document.createElement("div");
     progressInfo.setAttribute("id", "progressInfo");
@@ -222,6 +223,7 @@ function addNewRow(author, title, pages, alreadyReadResult) {
         unReadedBookNum += 1;
     }
 
+    // Update number in the progress bar
     updateProgressBar();
 }
 
@@ -281,7 +283,7 @@ bookList.addEventListener('click', function (event){
             // change the "alreadyRead" property of the corresponding object in the array
             myLibrary[cellNum-1].alreadyRead = newReadState;
 
-            // change the class of the current row(book) based on state of reading
+            // Based on state of reading, change the class of the current row(book) and the differnet book numbers
             if(newReadState){
                 currentTableRow.setAttribute("class", "readedBook");
                 readedBookNum += 1;
@@ -294,10 +296,12 @@ bookList.addEventListener('click', function (event){
             }
         }
 
+        // Update number in the progress bar
         updateProgressBar();
     }
 });
 
+// Update book numbers and show the result above the progress bar
 function updateProgressBar(){
     const progressBarLabel = document.querySelector("#progressInfo label");
     progressBarLabel.textContent = `Reading progress: ${readedBookNum} / ${bookNum}`;
