@@ -14,6 +14,8 @@ class Book {
 
         // call a static property within static method using 'this'
         this.myLibrary.push(newBook);
+
+        console.log(newBook.#info());
     }
 
     // Private Instance Field
@@ -21,7 +23,7 @@ class Book {
 
     // Private Instance Method
     #info() {
-        let result = `ID ${this.id}: ${this.title} by ${this.author}, ${this.pages} pages`; 
+        let result = `ID ${this.#id}: ${this.title} by ${this.author}, ${this.pages} pages`; 
         return result;
     }
 
@@ -101,11 +103,8 @@ bookDialog.addEventListener("close", (e) => {
         const title = document.querySelector('#title');
         const pages = document.querySelector('#pages');
         const alreadyRead = document.querySelector('input[name="read"]:checked');
-                
-        let result = `${title.value} by ${author.value}, ${pages.value} pages`;
+            
         let alreadyReadResult = (alreadyRead.value == "read_yes") ? true : false;
-
-        console.log(result);
 
         Book.addBookToLibrary(author.value, title.value, pages.value, alreadyReadResult);
 
