@@ -1,32 +1,43 @@
-const myLibrary = [];
+class Book {
+    // Public Static Field
+    static myLibrary = [];
 
-function Book(author, title, pages, alreadyRead) {
-    if (!new.target) {
-        throw Error("You must use the 'new' operator to call the constructor");
+    // Private Static Method
+    static #loopArrayAndDisplay(){
+        // call a static property within static method using 'this'
+        this.myLibrary.forEach((value) => {console.log(value.info())});
     }
-    this.id = crypto.randomUUID();
-    this.author = author;
-    this.title = title;
-    this.pages = pages;
-    this.alreadyRead = alreadyRead;
-    this.info = function(){
-        let result = `${this.title} by ${this.author}, ${this.pages} pages`; 
+
+    // Public Static Method
+    static addBookToLibrary(author, title, pages, alreadyRead) {
+        const newBook = new Book(author, title, pages, alreadyRead);
+
+        // call a static property within static method using 'this'
+        this.myLibrary.push(newBook);
+    }
+
+    // Private Instance Field
+    #id = crypto.randomUUID();
+
+    // Private Instance Method
+    #info() {
+        let result = `ID ${this.id}: ${this.title} by ${this.author}, ${this.pages} pages`; 
         return result;
-    };
-}
+    }
 
-function addBookToLibrary(author, title, pages, alreadyRead) {
-    const newBook = new Book(author, title, pages, alreadyRead);
-    myLibrary.push(newBook);
-}
+    // Public Instance Method
+    // Design prototype function that toggles a book instance’s read status
+    changeObjectState(newReadState){
+        this.alreadyRead = newReadState;
+    }
 
-function loopArrayAndDisplay(){
-    myLibrary.forEach((value) => {console.log(value.info())});
-}
-
-// Design prototype function that toggles a book instance’s read status
-Book.prototype.changeObjectState = function(newReadState){
-    this.alreadyRead = newReadState;
+    // Class Constructor
+    constructor(author, title, pages, alreadyRead) {
+        this.author = author;
+        this.title = title;
+        this.pages = pages;
+        this.alreadyRead = alreadyRead;
+    }
 }
 
 
@@ -96,7 +107,7 @@ bookDialog.addEventListener("close", (e) => {
 
         console.log(result);
 
-        addBookToLibrary(author.value, title.value, pages.value, alreadyReadResult);
+        Book.addBookToLibrary(author.value, title.value, pages.value, alreadyReadResult);
 
         if(bookNum == 0){
             while (bookList.firstChild) {
@@ -251,14 +262,14 @@ bookList.addEventListener('click', function (event){
             // delete the specific row in the table
             libraryTableBody.removeChild(currentTableRow);
             // delete the corresponding object of row in array
-            if(myLibrary[cellNum-1].alreadyRead){
+            if(Book.myLibrary[cellNum-1].alreadyRead){
                 readedBookNum -= 1;
             }
             else{
                 unReadedBookNum -= 1;
             }
 
-            myLibrary.splice(cellNum-1, 1);
+            Book.myLibrary.splice(cellNum-1, 1);
             
 
             // if there are remaining rows below the deleted row after the deletion,
@@ -286,7 +297,7 @@ bookList.addEventListener('click', function (event){
             let newReadState = target.checked;
             // If the checkbox in specific row is clicked (the reading state is changed),
             // change the "alreadyRead" property of the corresponding object in the array
-            myLibrary[cellNum-1].changeObjectState(newReadState);
+            Book.myLibrary[cellNum-1].changeObjectState(newReadState);
 
             // Based on state of reading, change the class of the current row(book) and the differnet book numbers
             if(newReadState){
